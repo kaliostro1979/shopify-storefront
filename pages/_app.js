@@ -1,58 +1,42 @@
-import {useState, useEffect} from 'react'
-import Router from "next/router";
+import React, {useState, useEffect} from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import {Button, Container, Grid, Header, Image, Menu, Sidebar, Visibility, Segment} from 'semantic-ui-react'
-import Link from "next/link";
+import { Grid, Menu, Sidebar, Segment } from 'semantic-ui-react'
+import Cart from "../Components/Cart"
+import NavBar from "../Components/NavBar"
 
-const Navbar = () => {
-    const [fixed, setFixed] = useState(false)
 
-    return (
-        <Visibility
-            once={false}
-            onBottomVisible={() => setFixed(true)}
-            onBottomPassedReverse={() => setFixed(false)}
-        >
-            <Segment
-                inverted
-                textAlign = 'center'
-                style={{minHeight: 50, padding: '1em 2em'}}
-            >
-                <Menu
-                    fixed={fixed ? 'top' : null}
-                    inverted={!fixed}
-                    pointing={!fixed}
-                    secondary={!fixed}
-                    size='large'
-                >
-                    <Container>
-                        <Menu.Item
-                            active
-                        >
-                            <Link href='/'><a>Home</a></Link>
-                        </Menu.Item>
-                        <Menu.Item>
-                            <Link href='/about'><a>About Us</a></Link>
-                        </Menu.Item>
-                        <Menu.Item position='right'>
-                            <Button onClick={()=>{
-                                const storage = window.localStorage
-                                const cart = JSON.parse(storage.getItem('cart'))
-                                Router.replace(cart.webUrl)
-                            }}>Checkout</Button>
-                        </Menu.Item>
-                    </Container>
-                </Menu>
-            </Segment>
-        </Visibility>
-    )
-}
 
 function MyApp({Component, pageProps}) {
+
+    const [visible, setVisible] = useState(false)
+
     return (
         <>
-            <Navbar/>
-            <Component {...pageProps} />
+            <Grid columns={1}>
+                <Grid.Column>
+                    <Sidebar.Pushable as={Segment}>
+                        <Sidebar
+                            as={Menu}
+                            animation='push'
+                            icon='labeled'
+                            onHide={() => setVisible(false)}
+                            vertical
+                            visible={visible}
+                            width='thin'
+                            direction={'right'}
+                        >
+                            <Cart/>
+                        </Sidebar>
+
+                        <Sidebar.Pusher dimmed={visible}>
+                            <Segment basic>
+                                <NavBar visible={visible} setVisible={setVisible}/>
+                                <Component {...pageProps} />
+                            </Segment>
+                        </Sidebar.Pusher>
+                    </Sidebar.Pushable>
+                </Grid.Column>
+            </Grid>
         </>
     )
 }

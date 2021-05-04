@@ -1,11 +1,35 @@
-/*import { useRouter } from 'next/router'*/
 import {useState} from 'react'
 import {client} from "../../utils/shopify";
-import {Grid, Image, Input, List} from "semantic-ui-react";
+import {Button, Grid, Image, Input, List, Select} from "semantic-ui-react";
 
 const Product = ({product}) => {
     const [image, setImage] = useState(product.images[0])
     const [quantity, setQuantity] = useState(0)
+    const [variant, setVariant] = useState(product.variants[0])
+
+
+
+    const [price, setPrice] = useState(product.variants[0].price)
+
+    const variantOptions = product.variants.map((variant) => {
+        return {
+            key: variant.title,
+            value: variant.title,
+            text: variant.title
+        }
+    })
+
+
+    const handleChange = (event, data) => {
+        const targetValue = data.value
+        setVariant(targetValue)
+        product.variants.forEach(variant => {
+            if(variant.title === targetValue){
+                setPrice(variant.price)
+                setVariant(variant)
+            }
+        });
+    }
 
 
     const addToCard = async () => {
@@ -16,8 +40,9 @@ const Product = ({product}) => {
             checkoutId = checkOut.id
             storage.setItem('checkoutId', checkoutId)
         }
+
         const cart = await client.checkout.addLineItems(checkoutId, [{
-            variantId: product.variants[0].id,
+            variantId: variant.id,
             quantity: quantity
         }])
 
@@ -30,7 +55,7 @@ const Product = ({product}) => {
             <Grid.Row column='2'>
                 <Grid.Column width={10}>
                     <Grid.Row>
-                        <Image src={image.src} wrapped ui={false}/>
+                        <Image src={image.src} fluid/>
                     </Grid.Row>
                     <Grid.Row>
                         <List horizontal divided>
@@ -38,7 +63,7 @@ const Product = ({product}) => {
                                 product.images.map((image) => {
                                     return (
                                         <List.Item key={Math.random()} onClick={() => setImage(image)}>
-                                            <Image src={image.src} wrapped ui={false} size='small'/>
+                                            <Image src={image.src} size='small'/>
                                         </List.Item>
                                     )
                                 })
@@ -47,20 +72,27 @@ const Product = ({product}) => {
                     </Grid.Row>
                 </Grid.Column>
                 <Grid.Column width={6} style={{marginTop: 50}}>
-                    <Input
-                        action={{
-                            color: 'teal',
-                            labelPosition: 'left',
-                            icon: 'cart',
-                            content: 'Checkout',
-                            onClick: addToCard,
-                        }}
-                        onChange = {(e, {value})=>setQuantity(Number(value))}
-                        type='number'
-                        actionPosition='left'
-                        placeholder='Search...'
-                        defaultValue='52.03'
-                    />
+                    <h3>{product.title}</h3>
+                    <h5>{product.vendor}</h5>
+                    <Select placeholder='Select your variant' options={variantOptions} onChange={handleChange}/>
+                    <p>{price}</p>
+                    <div className="addToCardBtn">
+                        <Input
+                            action={{
+                                color: 'red',
+                                labelPosition: 'right',
+                                icon: 'cart',
+                                content: 'Add to Card',
+                                onClick: addToCard,
+                            }}
+                            onChange={(e, {value}) => setQuantity(Number(value))}
+                            type='number'
+                            actionPosition='left'
+                            placeholder='Search...'
+                            defaultValue='1'
+                        />
+                    </div>
+                    <p>{product.description}</p>
                 </Grid.Column>
             </Grid.Row>
         </Grid>

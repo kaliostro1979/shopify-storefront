@@ -2,6 +2,7 @@ import Head from "next/head";
 import {Button, Card, Header, Image} from "semantic-ui-react";
 import { client } from "../utils/shopify";
 import Link from "next/link";
+import SideCard from "../Components/SideCart";
 
 
 export default function Home({ products }) {
@@ -11,6 +12,7 @@ export default function Home({ products }) {
             <Head>
                 <title>Shopify with Next JS</title>
             </Head>
+
             <Card.Group itemsPerRow='4'>
                 {
                     products.map((product)=>{
