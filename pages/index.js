@@ -11,11 +11,9 @@ export default function Home({ products }) {
             <Head>
                 <title>Shopify with Next JS</title>
             </Head>
-            <Button color='violet'>Violet</Button>
-            <Card.Group itemsPerRow='3'>
+            <Card.Group itemsPerRow='4'>
                 {
                     products.map((product)=>{
-                        console.log(product);
                         return(
                             <Link href={`/product/${product.id}`} key={product.id}>
                                 <Card>

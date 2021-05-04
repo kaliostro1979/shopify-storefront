@@ -1,10 +1,12 @@
 import {useState, useEffect} from 'react'
+import Router from "next/router";
 import 'semantic-ui-css/semantic.min.css'
 import {Button, Container, Grid, Header, Image, Menu, Sidebar, Visibility, Segment} from 'semantic-ui-react'
 import Link from "next/link";
 
 const Navbar = () => {
     const [fixed, setFixed] = useState(false)
+
     return (
         <Visibility
             once={false}
@@ -31,6 +33,13 @@ const Navbar = () => {
                         </Menu.Item>
                         <Menu.Item>
                             <Link href='/about'><a>About Us</a></Link>
+                        </Menu.Item>
+                        <Menu.Item position='right'>
+                            <Button onClick={()=>{
+                                const storage = window.localStorage
+                                const cart = JSON.parse(storage.getItem('cart'))
+                                Router.replace(cart.webUrl)
+                            }}>Checkout</Button>
                         </Menu.Item>
                     </Container>
                 </Menu>
