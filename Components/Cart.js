@@ -1,24 +1,24 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import {Button, Card, Feed, Image} from "semantic-ui-react";
 import {client} from "../utils/shopify";
 import Router from "next/router";
 
-const Cart = ({product}) => {
+
+const Cart = ({allItems}) => {
     const [cartItems, setCartItems] = useState([])
 
-    useEffect(() => {
-        let allCartItems = window.localStorage.getItem('cart')
-        if (allCartItems) {
-            const cartItemsArray = JSON.parse(allCartItems).lineItems
-            setCartItems(cartItemsArray)
-        }
-    }, [])
+
+    useEffect(async () => {
+        setCartItems(allItems)
+    }, [allItems])
+
 
     const removeItem = async (event, item) => {
         const storage = window.localStorage
         let checkoutId = storage.getItem('checkoutId')
         const updatedCart = await client.checkout.updateLineItems(checkoutId, [{id: item.id, quantity: 0}])
-        storage.setItem('cart', JSON.stringify(updatedCart))
+        console.log(updatedCart.lineItems);
+        setCartItems(updatedCart.lineItems)
     }
 
 
@@ -36,6 +36,16 @@ const Cart = ({product}) => {
                             <div className="cart-item__title">
                                 <p>{item.title}</p>
                             </div>
+                            <div className="cart-item__variant-title">
+                                <span>{item.variant.title}</span>
+                            </div>
+                            <div className="cart-item__quantity">
+                                {item.quantity}
+                            </div>
+                            <div className="cart-item__price">
+                                <span>{item.variant.priceV2.amount} </span>
+                                <span>{item.variant.priceV2.currencyCode}</span>
+                            </div>
                             <div className="cart-item__remove">
                                 <Button color='red' size={"tiny"} onClick={(event, id) => {
                                     removeItem(event, item)
@@ -45,14 +55,21 @@ const Cart = ({product}) => {
                     )
                 }) : <p>There are no items in cart</p>
             }
-            <Button onClick={()=>{
-                const storage = window.localStorage
-                const cart = JSON.parse(storage.getItem('cart'))
-                Router.replace(cart.webUrl)
-            }}>Checkout</Button>
+            <Button
+                onClick={() => {
+                    const storage = window.localStorage
+                    const cart = JSON.parse(storage.getItem('cart'))
+                    Router.replace(cart.webUrl)
+                }}
+                disabled={cartItems.length === 0}
+
+            >Checkout</Button>
         </>
     )
 }
+
+
+
 
 export default Cart
 

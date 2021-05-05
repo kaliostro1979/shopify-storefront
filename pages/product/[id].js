@@ -1,10 +1,11 @@
 import {useState} from 'react'
 import {client} from "../../utils/shopify";
 import {Button, Grid, Image, Input, List, Select} from "semantic-ui-react";
+import Cart, {getAllItems} from "../../Components/Cart";
 
 const Product = ({product}) => {
     const [image, setImage] = useState(product.images[0])
-    const [quantity, setQuantity] = useState(0)
+    const [quantity, setQuantity] = useState(1)
     const [variant, setVariant] = useState(product.variants[0])
 
 
@@ -48,7 +49,6 @@ const Product = ({product}) => {
 
         storage.setItem('cart', JSON.stringify(cart))
     }
-
 
     return (
         <Grid container centered>
@@ -102,7 +102,9 @@ const Product = ({product}) => {
 export async function getServerSideProps({query}) {
     const prodId = query.id
     const product = await client.product.fetch(prodId)
-    return {props: {product: JSON.parse(JSON.stringify(product))}}
+    return {
+        props: {product: JSON.parse(JSON.stringify(product))}
+    }
 }
 
 

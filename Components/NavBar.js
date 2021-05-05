@@ -1,10 +1,16 @@
 import React, {useState} from "react";
 import {Container, Menu, Segment, Visibility} from "semantic-ui-react";
-import Link from "next/link";
+import Router from "next/router";
 import SideCartCheckbox from "./Checkbox";
 
 const NavBar = ({visible, setVisible})=>{
     const [fixed, setFixed] = useState(false)
+    const [activeItem, setActiveItem] = useState('home')
+
+    const setActive = (e, name)=>{
+        setActiveItem(name.name)
+        Router.push('/' + name.name)
+    }
 
     return (
         <Visibility
@@ -25,19 +31,17 @@ const NavBar = ({visible, setVisible})=>{
                     size='large'
                 >
                     <Container>
-                        <Menu.Item
-                            active
-                        >
-                            <Link href='/'><a>Home</a></Link>
+                        <Menu.Item name='' link={true} active={ activeItem === ''} onClick={(e, name)=>setActive(e, name)}>
+                            Home
+                        </Menu.Item >
+                        <Menu.Item name='about' link={true} active={ activeItem === 'about'} onClick={(e, name)=>setActive(e, name)}>
+                           About Us
                         </Menu.Item>
-                        <Menu.Item>
-                            <Link href='/about'><a>About Us</a></Link>
-                        </Menu.Item>
-                        <Menu.Item>
-                            <Link href='/collections'><a>Collection</a></Link>
+                        <Menu.Item name='collections' link={true} active={ activeItem === 'collections'} onClick={(e, name)=>setActive(e, name)}>
+                            Collection
                         </Menu.Item>
 
-                        <Menu.Item>
+                        <Menu.Item position={'right'}>
                             <SideCartCheckbox visible={visible} setVisible={setVisible}/>
                         </Menu.Item>
                     </Container>
