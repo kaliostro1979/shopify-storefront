@@ -70,7 +70,6 @@ const Cart = ({allItems, checkoutObject}) => {
                                 <span>{checkoutObject.totalPriceV2 ? checkoutObject.totalPriceV2.currencyCode : ''}</span>
                             </div> : ''
                     }
-
                 </Card.Description>
             </Card.Group>
 

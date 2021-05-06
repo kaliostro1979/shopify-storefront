@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Grid, Menu, Sidebar, Segment } from 'semantic-ui-react'
+import {Grid, Menu, Sidebar, Segment} from 'semantic-ui-react'
 import Cart from "../Components/Cart"
 import NavBar from "../Components/NavBar"
 import {client} from "../utils/shopify";
@@ -10,7 +10,7 @@ import 'swiper/swiper.scss';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
-
+import Head from "next/head";
 
 
 function MyApp({Component, pageProps}) {
@@ -20,7 +20,7 @@ function MyApp({Component, pageProps}) {
     const [checkoutObject, setCheckoutObject] = useState({})
 
 
-    useEffect(async ()=>{
+    useEffect(async () => {
         const storage = window.localStorage
         let checkoutId = storage.getItem('checkoutId')
         if (!checkoutId) {
@@ -31,11 +31,15 @@ function MyApp({Component, pageProps}) {
         const itemsFromCheckout = await client.checkout.fetch(checkoutId)
         setAllItems(itemsFromCheckout.lineItems)
         setCheckoutObject(itemsFromCheckout)
-    },[visible])
+    }, [visible])
 
 
     return (
         <>
+            <Head>
+                <title>Shopify Store with Next JS</title>
+            </Head>
+
             <Grid columns={1}>
                 <Grid.Column>
                     <Sidebar.Pushable as={Segment}>
@@ -65,7 +69,6 @@ function MyApp({Component, pageProps}) {
         </>
     )
 }
-
 
 
 export default MyApp

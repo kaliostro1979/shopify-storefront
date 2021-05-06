@@ -92,7 +92,6 @@ const Product = ({product, collections}) => {
                             spaceBetween={20}
                             slidesPerView={4}
                             navigation
-                            zoom
                         >
                             <List horizontal divided>
                                 {
@@ -142,7 +141,9 @@ const Product = ({product, collections}) => {
                             min={1}
                         />
                     </div>
-                    <p>{product.description}</p>
+                    <div className="product-description">
+                        <p>{product.description}</p>
+                    </div>
                 </Grid.Column>
             </Grid.Row>
             <Grid.Row>
