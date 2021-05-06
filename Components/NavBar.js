@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Container, Menu, Segment, Visibility} from "semantic-ui-react";
+import {Container, Image, Menu, Segment, Visibility} from "semantic-ui-react";
 import Router from "next/router";
 import SideCartCheckbox from "./Checkbox";
 
@@ -16,6 +16,10 @@ const NavBar = ({visible, setVisible})=>{
                     size='large'
                 >
                     <Container>
+                        <Menu.Item name='' link={true} active={ activeItem === ''} onClick={(e, name)=>setActive(e, name)}>
+                            <Image src={'/images/logo.png'} width={50}/>
+                        </Menu.Item >
+
                         <Menu.Item name='' link={true} active={ activeItem === ''} onClick={(e, name)=>setActive(e, name)}>
                             Home
                         </Menu.Item >

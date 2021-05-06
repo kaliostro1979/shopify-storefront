@@ -4,7 +4,7 @@ import {client} from "../utils/shopify";
 import Router from "next/router";
 
 
-const Cart = ({allItems, checkoutObject}) => {
+const Cart = ({allItems, checkoutObject, currencySymbol}) => {
     const [cartItems, setCartItems] = useState([])
     const [totalPrice, setTotalPrice] = useState('')
 
@@ -47,7 +47,7 @@ const Cart = ({allItems, checkoutObject}) => {
                                         <p>Variant: {item.variant.title}</p>
                                         <p>Quantity: {item.quantity}</p>
                                         <strong>{item.variant.priceV2.amount * item.quantity} </strong>
-                                        <strong>{item.variant.priceV2.currencyCode}</strong>
+                                        <strong>{currencySymbol}</strong>
                                     </Card.Meta>
                                 </Card.Content>
                                 <Card.Content extra>
@@ -67,7 +67,7 @@ const Cart = ({allItems, checkoutObject}) => {
                             <div className='total-price'>
                                 <span className='total-price__label'>Total price: </span>
                                 <span> {totalPrice} </span>
-                                <span>{checkoutObject.totalPriceV2 ? checkoutObject.totalPriceV2.currencyCode : ''}</span>
+                                <span>{currencySymbol}</span>
                             </div> : ''
                     }
                 </Card.Description>

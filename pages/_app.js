@@ -11,6 +11,7 @@ import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
 import Head from "next/head";
+import {currencies} from "../utils/currencies";
 
 
 function MyApp({Component, pageProps}) {
@@ -18,6 +19,7 @@ function MyApp({Component, pageProps}) {
     const [visible, setVisible] = useState(false)
     const [allItems, setAllItems] = useState([])
     const [checkoutObject, setCheckoutObject] = useState({})
+    const [currencySymbol, setCurrencySymbol] = useState('')
 
 
     useEffect(async () => {
@@ -28,6 +30,12 @@ function MyApp({Component, pageProps}) {
             checkoutId = checkOut.id
             storage.setItem('checkoutId', checkoutId)
         }
+
+        currencies.forEach((currency)=>{
+            if (checkoutObject.totalPriceV2 && checkoutObject.totalPriceV2.currencyCode === currency.name){
+                setCurrencySymbol(currency.symbol)
+            }
+        })
         const itemsFromCheckout = await client.checkout.fetch(checkoutId)
         setAllItems(itemsFromCheckout.lineItems)
         setCheckoutObject(itemsFromCheckout)
@@ -54,7 +62,7 @@ function MyApp({Component, pageProps}) {
                             direction={'right'}
                             className={'side-cart__main'}
                         >
-                            <Cart allItems={allItems} checkoutObject={checkoutObject}/>
+                            <Cart allItems={allItems} checkoutObject={checkoutObject} currencySymbol={currencySymbol}/>
                         </Sidebar>
 
                         <Sidebar.Pusher dimmed={visible}>

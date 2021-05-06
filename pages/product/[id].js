@@ -1,9 +1,10 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {client} from "../../utils/shopify";
 import {Button, Grid, Image, Input, List, Select} from "semantic-ui-react";
 import RecommendedProducts from "../../Components/RecommendedProducts";
 import SwiperCore, {Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs, Zoom} from 'swiper';
 import {Swiper, SwiperSlide} from 'swiper/react';
+import {currencies} from '../../utils/currencies'
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs, Zoom]);
 
@@ -11,7 +12,16 @@ const Product = ({product, collections}) => {
     const [quantity, setQuantity] = useState(1)
     const [variant, setVariant] = useState(product.variants[0])
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [currencySymbol, setCurrencySymbol] = useState('')
 
+
+    useEffect(()=>{
+        currencies.forEach((currency)=>{
+            if (variant.priceV2 && variant.priceV2.currencyCode === currency.name){
+                setCurrencySymbol(currency.symbol)
+            }
+        })
+    }, [])
 
     const variantOptions = product.variants.map((variant) => {
         return {
@@ -115,12 +125,12 @@ const Product = ({product, collections}) => {
                     <Select placeholder='Select your variant' options={variantOptions} onChange={handleChange}/>
                     <div className="product-price">
                         <span>{variant.priceV2.amount} </span>
-                        <span>{variant.priceV2.currencyCode} </span>
+                        <span>{currencySymbol}</span>
                         {
                             variant.compareAtPriceV2 ?
                                 <span className='product-comparePrice'>
                                     {variant.compareAtPriceV2.amount}
-                                    {variant.compareAtPriceV2.currencyCode}
+                                    {currencySymbol}
                             </span> : ''
                         }
                     </div>
