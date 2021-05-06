@@ -65,17 +65,13 @@ const Product = ({product, collections}) => {
         })
     })
 
-    console.log(product);
 
     return (
         <Grid container centered>
             <Grid.Row column='2'>
                 <Grid.Column width={10}>
                     <Grid.Row>
-                        <Swiper
-                            thumbs={{ swiper: thumbsSwiper }}
-                            zoom
-                        >
+                        <Swiper thumbs={{ swiper: thumbsSwiper }} >
                             {
                                 product.images.map((image)=>{
                                     return(
@@ -136,13 +132,14 @@ const Product = ({product, collections}) => {
                                 labelPosition: 'right',
                                 icon: 'cart',
                                 content: 'Add to Card',
-                                onClick: addToCard,
+                                onClick: addToCard
                             }}
                             onChange={(e, {value}) => setQuantity(Number(value))}
                             type='number'
                             actionPosition='left'
                             placeholder='Search...'
                             defaultValue='1'
+                            min={1}
                         />
                     </div>
                     <p>{product.description}</p>

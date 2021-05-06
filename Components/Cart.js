@@ -4,57 +4,76 @@ import {client} from "../utils/shopify";
 import Router from "next/router";
 
 
-const Cart = ({allItems}) => {
+const Cart = ({allItems, checkoutObject}) => {
     const [cartItems, setCartItems] = useState([])
+    const [totalPrice, setTotalPrice] = useState('')
 
 
     useEffect(async () => {
         setCartItems(allItems)
-    }, [allItems])
-
+        if (checkoutObject.totalPriceV2) {
+            setTotalPrice(checkoutObject.totalPriceV2.amount)
+        }
+    }, [allItems, checkoutObject])
 
     const removeItem = async (event, item) => {
         const storage = window.localStorage
         let checkoutId = storage.getItem('checkoutId')
         const updatedCart = await client.checkout.updateLineItems(checkoutId, [{id: item.id, quantity: 0}])
-        console.log(updatedCart.lineItems);
         setCartItems(updatedCart.lineItems)
+        setTotalPrice(updatedCart.totalPriceV2.amount)
     }
-
 
     return (
         <>
             <h1>Cart</h1>
+            <Card.Group centered>
+                {
+                    cartItems && cartItems.length !== 0 ? cartItems.map((item) => {
 
-            {
-                cartItems && cartItems.length !== 0 ? cartItems.map((item) => {
-                    return (
-                        <div className='cart-item' key={item.id}>
-                            <div className="cart-item__image">
-                                <Image src={item.variant.image.src} size={'small'}/>
-                            </div>
-                            <div className="cart-item__title">
-                                <p>{item.title}</p>
-                            </div>
-                            <div className="cart-item__variant-title">
-                                <span>{item.variant.title}</span>
-                            </div>
-                            <div className="cart-item__quantity">
-                                {item.quantity}
-                            </div>
-                            <div className="cart-item__price">
-                                <span>{item.variant.priceV2.amount} </span>
-                                <span>{item.variant.priceV2.currencyCode}</span>
-                            </div>
-                            <div className="cart-item__remove">
-                                <Button color='red' size={"tiny"} onClick={(event, id) => {
-                                    removeItem(event, item)
-                                }}>Remove</Button>
-                            </div>
-                        </div>
-                    )
-                }) : <p>There are no items in cart</p>
-            }
+                        return (
+
+                            <Card key={item.id} centered fluid>
+                                <Card.Content>
+                                    <Image
+                                        floated='left'
+                                        size='mini'
+                                        src={item.variant.image.src} size={'small'}
+                                    />
+                                    <Card.Header>
+                                        <strong>{item.title}</strong>
+                                    </Card.Header>
+                                    <Card.Meta>
+                                        <p>Variant: {item.variant.title}</p>
+                                        <p>Quantity: {item.quantity}</p>
+                                        <strong>{item.variant.priceV2.amount * item.quantity} </strong>
+                                        <strong>{item.variant.priceV2.currencyCode}</strong>
+                                    </Card.Meta>
+                                </Card.Content>
+                                <Card.Content extra>
+                                    <div className='ui buttons'>
+                                        <Button basic color='red' onClick={(event, id) => {
+                                            removeItem(event, item)
+                                        }}>Remove</Button>
+                                    </div>
+                                </Card.Content>
+                            </Card>
+                        )
+                    }) : <article className='noCartText'>There are no items in cart</article>
+                }
+                <Card.Description className="total-amount">
+                    {
+                        cartItems && cartItems.length !== 0 ?
+                            <div className='total-price'>
+                                <span className='total-price__label'>Total price: </span>
+                                <span> {totalPrice} </span>
+                                <span>{checkoutObject.totalPriceV2 ? checkoutObject.totalPriceV2.currencyCode : ''}</span>
+                            </div> : ''
+                    }
+
+                </Card.Description>
+            </Card.Group>
+
             <Button
                 onClick={() => {
                     const storage = window.localStorage
@@ -62,13 +81,11 @@ const Cart = ({allItems}) => {
                     Router.replace(cart.webUrl)
                 }}
                 disabled={cartItems.length === 0}
-
+                className='checkout-btn'
             >Checkout</Button>
         </>
     )
 }
-
-
 
 
 export default Cart

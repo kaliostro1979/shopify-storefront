@@ -4,7 +4,6 @@ import Router from "next/router";
 import SideCartCheckbox from "./Checkbox";
 
 const NavBar = ({visible, setVisible})=>{
-    const [fixed, setFixed] = useState(false)
     const [activeItem, setActiveItem] = useState('home')
 
     const setActive = (e, name)=>{
@@ -13,21 +12,7 @@ const NavBar = ({visible, setVisible})=>{
     }
 
     return (
-        <Visibility
-            once={false}
-            onBottomVisible={() => setFixed(true)}
-            onBottomPassedReverse={() => setFixed(false)}
-        >
-            <Segment
-                inverted
-                textAlign = 'center'
-                style={{minHeight: 50, padding: '1em 2em'}}
-            >
                 <Menu
-                    fixed={fixed ? 'top' : null}
-                    inverted={!fixed}
-                    pointing={!fixed}
-                    secondary={!fixed}
                     size='large'
                 >
                     <Container>
@@ -38,7 +23,7 @@ const NavBar = ({visible, setVisible})=>{
                            About Us
                         </Menu.Item>
                         <Menu.Item name='collections' link={true} active={ activeItem === 'collections'} onClick={(e, name)=>setActive(e, name)}>
-                            Collection
+                            Collections
                         </Menu.Item>
 
                         <Menu.Item position={'right'}>
@@ -46,8 +31,6 @@ const NavBar = ({visible, setVisible})=>{
                         </Menu.Item>
                     </Container>
                 </Menu>
-            </Segment>
-        </Visibility>
     )
 }
 

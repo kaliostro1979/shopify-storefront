@@ -17,6 +17,7 @@ function MyApp({Component, pageProps}) {
 
     const [visible, setVisible] = useState(false)
     const [allItems, setAllItems] = useState([])
+    const [checkoutObject, setCheckoutObject] = useState({})
 
 
     useEffect(async ()=>{
@@ -29,6 +30,7 @@ function MyApp({Component, pageProps}) {
         }
         const itemsFromCheckout = await client.checkout.fetch(checkoutId)
         setAllItems(itemsFromCheckout.lineItems)
+        setCheckoutObject(itemsFromCheckout)
     },[visible])
 
 
@@ -46,8 +48,9 @@ function MyApp({Component, pageProps}) {
                             visible={visible}
                             width='wide'
                             direction={'right'}
+                            className={'side-cart__main'}
                         >
-                            <Cart allItems={allItems}/>
+                            <Cart allItems={allItems} checkoutObject={checkoutObject}/>
                         </Sidebar>
 
                         <Sidebar.Pusher dimmed={visible}>

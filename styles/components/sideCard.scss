@@ -1,0 +1,35 @@
+.card-compare__price{
+  text-decoration: line-through;
+  color: grey;
+  margin-left: 15px;
+}
+
+.checkout-btn{
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-25%);
+}
+
+.noCartText{
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.side-cart__main{
+  padding: 20px;
+}
+
+.total-amount{
+  width: 100%;
+  text-align: right;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 20px 0;
+  .total-price{
+    &__label{
+      color: red;
+    }
+  }
+}
