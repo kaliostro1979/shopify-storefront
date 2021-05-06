@@ -4,6 +4,12 @@ import { Grid, Menu, Sidebar, Segment } from 'semantic-ui-react'
 import Cart from "../Components/Cart"
 import NavBar from "../Components/NavBar"
 import {client} from "../utils/shopify";
+import '../styles/style.scss'
+import 'swiper/swiper.scss';
+import 'swiper/swiper.scss';
+import 'swiper/components/navigation/navigation.scss';
+import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/scrollbar/scrollbar.scss';
 
 
 
@@ -11,6 +17,7 @@ function MyApp({Component, pageProps}) {
 
     const [visible, setVisible] = useState(false)
     const [allItems, setAllItems] = useState([])
+
 
     useEffect(async ()=>{
         const storage = window.localStorage
@@ -24,7 +31,6 @@ function MyApp({Component, pageProps}) {
         setAllItems(itemsFromCheckout.lineItems)
     },[visible])
 
-    console.log(allItems);
 
     return (
         <>

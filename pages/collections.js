@@ -1,21 +1,25 @@
 import {client} from "../utils/shopify";
 import {Card, Image} from "semantic-ui-react";
+import Link from "next/link";
 
 export default function Collections({ collections }) {
-    console.log(collections);
+
+
     return(
         <Card.Group>
             {
                 collections.map((collection)=>{
                      return (
-                         <Card key={collection.id}>
-                             <Image src={collection.image ? collection.image.src : ''} wrapped ui={false} size='small' key={Math.random()}/>
-                             <Card.Content>
-                                 <Card.Header>
-                                     {collection.title}
-                                 </Card.Header>
-                             </Card.Content>
-                         </Card>
+                         <Link href={`/collection/${collection.id}`} key={collection.id}>
+                             <Card key={collection.id}>
+                                 <Image src={collection.image ? collection.image.src : ''} wrapped ui={false} size='small'/>
+                                 <Card.Content>
+                                     <Card.Header>
+                                         {collection.title}
+                                     </Card.Header>
+                                 </Card.Content>
+                             </Card>
+                         </Link>
                      )
                 })
             }

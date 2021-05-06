@@ -12,7 +12,7 @@ export default function Collection ({collection}){
                 {
                     collection.products.map((product)=>{
                         return(
-                            <Link href={`/product/${product.id}`}>
+                            <Link href={`/product/${product.id}`} key={product.id}>
                                 <Card>
                                     <Image src={product.images[0].src}/>
                                     <Card.Content>

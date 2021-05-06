@@ -1,8 +1,8 @@
 import Head from "next/head";
-import {Button, Card, Header, Image} from "semantic-ui-react";
+import { Card, Header, Image} from "semantic-ui-react";
 import { client } from "../utils/shopify";
 import Link from "next/link";
-import SideCard from "../Components/SideCart";
+
 
 
 export default function Home({ products }) {
