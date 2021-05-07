@@ -3,6 +3,7 @@ import {Card, Image} from "semantic-ui-react";
 import {client} from "../utils/shopify";
 
 const Products = ({ products })=>{
+    console.log(products);
     return(
         <Card.Group itemsPerRow='4'>
             {

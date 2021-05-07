@@ -33,6 +33,9 @@ const NavBar = ({visible, setVisible})=>{
                         <Menu.Item name='products' link={true} active={ activeItem === 'products'} onClick={(e, name)=>setActive(e, name)}>
                             Products
                         </Menu.Item>
+                        {/*<Menu.Item name='login' link={true} active={ activeItem === 'login'} onClick={(e, name)=>setActive(e, name)}>
+                            Login/Register
+                        </Menu.Item>*/}
 
                         <Menu.Item position={'right'}>
                             <SideCartCheckbox visible={visible} setVisible={setVisible}/>

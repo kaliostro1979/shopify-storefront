@@ -2,34 +2,29 @@ import {useState, useEffect, useCallback} from 'react'
 import {Button, Card, Feed, Image} from "semantic-ui-react";
 import {client} from "../utils/shopify";
 import Router from "next/router";
+import {useDispatch, useSelector} from "react-redux";
+import {removeItemFromCartHandle} from "../redux/actions/removeItemFromCartAction";
+import {getAllCheckoutItems} from "../redux/actions/getAllCheckoutItemsAction";
 
 
-const Cart = ({allItems, checkoutObject, currencySymbol}) => {
-    const [cartItems, setCartItems] = useState([])
-    const [totalPrice, setTotalPrice] = useState('')
+const Cart = ({ checkoutObject, currencySymbol}) => {
+
+    const state = useSelector(state=>state.cart)
+    const dispatch = useDispatch()
 
 
     useEffect(async () => {
-        setCartItems(allItems)
-        if (checkoutObject.totalPriceV2) {
-            setTotalPrice(checkoutObject.totalPriceV2.amount)
-        }
-    }, [allItems, checkoutObject])
+        dispatch(getAllCheckoutItems())
+    }, [checkoutObject])
 
-    const removeItem = async (event, item) => {
-        const storage = window.localStorage
-        let checkoutId = storage.getItem('checkoutId')
-        const updatedCart = await client.checkout.updateLineItems(checkoutId, [{id: item.id, quantity: 0}])
-        setCartItems(updatedCart.lineItems)
-        setTotalPrice(updatedCart.totalPriceV2.amount)
-    }
 
     return (
         <>
             <h1>Cart</h1>
+
             <Card.Group centered>
                 {
-                    cartItems && cartItems.length !== 0 ? cartItems.map((item) => {
+                    state.lineItems && state.lineItems.length !== 0 ? state.lineItems.map((item) => {
 
                         return (
 
@@ -52,8 +47,8 @@ const Cart = ({allItems, checkoutObject, currencySymbol}) => {
                                 </Card.Content>
                                 <Card.Content extra>
                                     <div className='ui buttons'>
-                                        <Button basic color='red' onClick={(event, id) => {
-                                            removeItem(event, item)
+                                        <Button basic color='red' onClick={() => {
+                                            dispatch(removeItemFromCartHandle(item.id))
                                         }}>Remove</Button>
                                     </div>
                                 </Card.Content>
@@ -63,10 +58,10 @@ const Cart = ({allItems, checkoutObject, currencySymbol}) => {
                 }
                 <Card.Description className="total-amount">
                     {
-                        cartItems && cartItems.length !== 0 ?
+                        state.lineItems && state.lineItems.length !== 0 ?
                             <div className='total-price'>
                                 <span className='total-price__label'>Total price: </span>
-                                <span> {totalPrice} </span>
+                                <span> {state.totalPriceV2.amount} </span>
                                 <span>{currencySymbol}</span>
                             </div> : ''
                     }
@@ -79,7 +74,7 @@ const Cart = ({allItems, checkoutObject, currencySymbol}) => {
                     const cart = JSON.parse(storage.getItem('cart'))
                     Router.replace(cart.webUrl)
                 }}
-                disabled={cartItems.length === 0}
+                disabled={state.lineItems && state.lineItems.length === 0}
                 className='checkout-btn'
             >Checkout</Button>
         </>

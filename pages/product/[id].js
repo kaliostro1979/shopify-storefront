@@ -1,10 +1,13 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useReducer} from 'react'
 import {client} from "../../utils/shopify";
 import {Button, Grid, Image, Input, List, Select} from "semantic-ui-react";
 import RecommendedProducts from "../../Components/RecommendedProducts";
 import SwiperCore, {Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs, Zoom} from 'swiper';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {currencies} from '../../utils/currencies'
+import {useDispatch} from "react-redux";
+import {handleAddToCart} from "../../redux/actions/addToCartAction";
+
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs, Zoom]);
 
@@ -14,6 +17,8 @@ const Product = ({product, collections}) => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [currencySymbol, setCurrencySymbol] = useState('')
 
+
+    const dispatch = useDispatch()
 
     useEffect(()=>{
         currencies.forEach((currency)=>{
@@ -41,22 +46,7 @@ const Product = ({product, collections}) => {
         });
     }
 
-    const addToCard = async () => {
-        const storage = window.localStorage
-        let checkoutId = storage.getItem('checkoutId')
-        if (!checkoutId) {
-            const checkOut = await client.checkout.create()
-            checkoutId = checkOut.id
-            storage.setItem('checkoutId', checkoutId)
-        }
 
-        const cart = await client.checkout.addLineItems(checkoutId, [{
-            variantId: variant.id,
-            quantity: quantity
-        }])
-
-        storage.setItem('cart', JSON.stringify(cart))
-    }
 
     const recommended = collections.map((col) => {
         return col.products.map((prod) => {
@@ -141,7 +131,7 @@ const Product = ({product, collections}) => {
                                 labelPosition: 'right',
                                 icon: 'cart',
                                 content: 'Add to Card',
-                                onClick: addToCard
+                                onClick: ()=>dispatch(handleAddToCart(variant, quantity))
                             }}
                             onChange={(e, {value}) => setQuantity(Number(value))}
                             type='number'

@@ -1,8 +1,6 @@
 import {client} from "../../utils/shopify";
-import {Card, Image} from "semantic-ui-react";
+import {Card, Image, Pagination} from "semantic-ui-react";
 import Link from "next/link";
-
-
 
 export default function Collection ({collection}){
     return(
@@ -30,7 +28,9 @@ export default function Collection ({collection}){
 
 
 export async function getServerSideProps({query}) {
+
     const collId = query.id
-    const collection = await client.collection.fetchWithProducts(collId, {productsFirst: 10})
+
+    const collection = await client.collection.fetchWithProducts(collId, {productsFirst: 5})
     return {props: {collection: JSON.parse(JSON.stringify(collection))}}
 }

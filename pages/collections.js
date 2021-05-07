@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export default function Collections({ collections }) {
 
-
     return(
         <Card.Group>
             {
@@ -30,6 +29,5 @@ export default function Collections({ collections }) {
 
 export async function getServerSideProps() {
     const collections = await client.collection.fetchAllWithProducts()
-
-        return { props: { collections: JSON.parse(JSON.stringify(collections)) } }
+    return { props: { collections: JSON.parse(JSON.stringify(collections)) } }
 }
